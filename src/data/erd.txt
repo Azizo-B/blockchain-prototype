@@ -1,0 +1,53 @@
+[User]
+*id
+username
+email
+password
+created_at
+
+[Wallet]
+*id
+address
+privateKey
+userId
+
+[SavedWallet]
+*id
+userId
+walletId
+alias
+
+[Block]
+*id
+index
+timestamp
+previousHash
+hash
+nonce
+
+[Transaction]
+*id
+type
+amount
+fromWalletId
+toWalletId
+signature
+timestamp
+blockId
+
+[NFT]
+*id
+tokenId
+metadataURI
+creatorWalletId
+ownerWalletId
+transactionId
+
+User 1--* Wallet
+User 1--* SavedWallet
+SavedWallet *--1 Wallet
+Block ?--+ Transaction
+Transaction *--+ Wallet
+Wallet 1--* NFT
+Wallet 1--* NFT
+Transaction 1--* NFT

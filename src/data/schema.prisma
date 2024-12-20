@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String  @unique(map: "idx_user_email_unique") 
+  password_hash String
+  roles         Json
+
+  wallets      Wallet[]      @relation("UserWallets")
+  savedWallets SavedWallet[] @relation("UserSavedWallets")
+}
+
+model Wallet {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  address    String @unique(map: "idx_wallet_address_unique")
+  privateKey String // TODO: not meant to be saved, client managed
+
+  userId String @db.ObjectId
+  user   User   @relation("UserWallets", fields: [userId], references: [id])
+
+  nftsOwned    NFT[]         @relation("NFTOwner")
+  nftsCreated  NFT[]         @relation("NFTCreator")
+  savedWallets SavedWallet[] @relation("WalletsSaved")
+}
+
+model SavedWallet {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  alias String
+
+  userId String @db.ObjectId
+  user   User   @relation("UserSavedWallets", fields: [userId], references: [id])
+
+  walletId String @db.ObjectId
+  wallet   Wallet @relation("WalletsSaved", fields: [walletId], references: [id])
+  @@unique([userId, walletId], name: "idx_unique_saved_wallet")
+}
+
+model Block {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  index        Int
+  timestamp    DateTime @default(now())
+  previousHash String
+  hash         String
+  nonce        Int
+
+  transactions Transaction[] @relation("BlockTransactions")
+}
+
+enum TransactionType {
+  transfer
+  nft_transfer
+  minting
+  block_reward
+}
+enum TransactionStatus {
+  pending
+  canceled
+  completed
+}
+
+model Transaction {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  type        TransactionType
+  status      TransactionStatus
+  amount      Float
+  fromAddress String?
+  toAddress   String
+  signature   String?
+  timestamp   DateTime        @default(now())
+
+  blockId String? @db.ObjectId
+  block   Block?  @relation("BlockTransactions", fields: [blockId], references: [id])
+
+  nftId String? @db.ObjectId
+  nft   NFT?    @relation("NFTTransactions", fields: [nftId], references: [id])
+}
+
+model NFT {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  metadata Json
+  burned Boolean @default(false)
+
+  creatorId String? @db.ObjectId
+  creator   Wallet? @relation("NFTCreator", fields: [creatorId], references: [id])
+
+  ownerId String? @db.ObjectId
+  owner   Wallet? @relation("NFTOwner", fields: [ownerId], references: [id])
+
+  transactions Transaction[] @relation("NFTTransactions")
+}
