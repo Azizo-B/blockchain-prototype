@@ -8,15 +8,12 @@ A RESTful API built with **Node.js** and **TypeScript**, showcasing a foundation
 
 - **Wallet Management**: Create and manage wallets securely.  
 - **Transaction Execution**: Perform transactions with cryptographic signatures.  
-- **Block Creation**: Store transactions in blocks linked by hashes, ensuring immutability and integrity.  
-- **Role-Based Access Control**: Protect sensitive routes using role-based permissions.  
-- **Swagger Documentation**: Explore the API with user-friendly, auto-generated documentation.  
+- **Block Creation**: Store transactions in blocks linked by hashes, ensuring immutability and integrity.    
 
 ### Technical Highlights  
 
-- **Node.js and TypeScript**: Combined the flexibility of Node.js with the type safety of TypeScript for a robust backend.  
-- **Blockchain Logic**: Implemented cryptographic hashing and linked data structures.  
-- **Modular Design**: Ensured a clean, scalable, and maintainable codebase.  
+- **Koa, Node.js, and TypeScript**: Built with Koa and its minimalistic framework, leveraging Node.js for scalability and TypeScript for type safety and maintainability.
+- **Blockchain Logic**: Implemented cryptographic hashing and linked data structures.
 
 ## Potential Enhancements
 
@@ -31,10 +28,6 @@ A RESTful API built with **Node.js** and **TypeScript**, showcasing a foundation
 ### Comprehensive Testing
 - Refactor and expand the test suite to include more robust and edge-case scenarios.
 - Transition from loose testing policies to a stricter and more comprehensive testing approach.
-
-### API Optimization
-- Optimize the API structure to align with a peer-to-peer model, allowing peers to independently run and manage their own transactions and blocks.
-
 
 ## Requirements  
 
